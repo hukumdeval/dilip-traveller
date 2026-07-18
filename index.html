@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 'self';
+  script-src 'self' 'unsafe-inline';
+  style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+  font-src https://fonts.gstatic.com;
+  img-src 'self' https: data:;
+  connect-src 'none';
+  form-action 'none';
+  frame-ancestors 'none';
+  base-uri 'self';
+">
+<meta name="referrer" content="no-referrer">
+<title>Dilip Traveller – Adventure from Sasaram</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600;1,700&family=DM+Sans:wght@300;400;500;600&family=Bebas+Neue&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --navy: #0d1b2a;
+    --navy-mid: #1b2d42;
+    --blue: #1a4a7a;
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --white: #ffffff;
+    --off-white: #f8f6f2;
+    --light-gray: #e8e4de;
+    --text-dark: #1a1a2e;
+    --text-mid: #4a5568;
+    --accent: #e05c2d;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--off-white);
+    color: var(--text-dark);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Cursor */
+  .cursor {
+    width: 10px; height: 10px;
+    background: var(--gold); border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 9999;
+  }
+  .cursor-ring {
+    width: 32px; height: 32px;
+    border: 1.5px solid var(--gold); border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 9998;
+    transition: transform 0.35s ease;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 200;
+    padding: 1.2rem 4rem;
+    display: flex; justify-content: space-between; align-items: center;
+    transition: background 0.4s, box-shadow 0.4s;
+  }
+  nav.scrolled {
+    background: rgba(255,255,255,0.97);
+    box-shadow: 0 1px 24px rgba(0,0,0,0.08);
+  }
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem; font-weight: 700; color: var(--white);
+    letter-spacing: 0.5px; transition: color 0.4s;
+  }
+  nav.scrolled .nav-logo { color: var(--navy); }
+  .nav-logo span { color: var(--gold); }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    font-size: 0.8rem; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase;
+    color: rgba(255,255,255,0.85); text-decoration: none; transition: color 0.3s;
+  }
+  nav.scrolled .nav-links a { color: var(--text-mid); }
+  .nav-links a:hover { color: var(--gold); }
+  nav.scrolled .nav-links a:hover { color: var(--gold); }
+
+  /* HERO — Tutla Bhawani Waterfall background */
+  .hero {
+    min-height: 100vh; position: relative;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+    background:
+      linear-gradient(to bottom, rgba(13,27,42,0.55) 0%, rgba(13,27,42,0.3) 40%, rgba(13,27,42,0.7) 100%),
+      url('https://safarway.com/wp-content/uploads/2021/11/Tutla-Bhawani-Waterfall-Saffron-Sight.jpg') center/cover no-repeat;
+  }
+  .hero-content { text-align: center; z-index: 2; padding: 0 2rem; max-width: 860px; }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: rgba(201,168,76,0.2); border: 1px solid rgba(201,168,76,0.5);
+    border-radius: 50px; padding: 0.4rem 1.2rem;
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase;
+    color: var(--gold-light); margin-bottom: 1.8rem;
+    animation: fadeUp 0.9s ease 0.2s both;
+  }
+  .hero-badge::before {
+    content: ''; width: 6px; height: 6px;
+    background: var(--gold); border-radius: 50%; animation: pulse 2s infinite;
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(4rem, 10vw, 8.5rem); line-height: 0.9;
+    color: var(--white); letter-spacing: 2px;
+    animation: fadeUp 0.9s ease 0.4s both;
+  }
+  .hero-title .gold { color: var(--gold); }
+
+  .hero-sub {
+    margin-top: 1.5rem; font-size: 1.05rem; font-weight: 300;
+    color: rgba(255,255,255,0.8); line-height: 1.8; max-width: 520px; margin-left: auto; margin-right: auto;
+    animation: fadeUp 0.9s ease 0.6s both;
+  }
+  .hero-loc {
+    margin-top: 0.7rem; font-size: 0.78rem; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--gold-light); opacity: 0.9;
+    animation: fadeUp 0.9s ease 0.7s both;
+  }
+
+  .hero-cta {
+    margin-top: 2.5rem; display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;
+    animation: fadeUp 0.9s ease 0.8s both;
+  }
+  .btn-gold {
+    background: var(--gold); color: var(--navy);
+    padding: 0.9rem 2.2rem; border: none; border-radius: 4px;
+    font-size: 0.85rem; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
+    text-decoration: none; cursor: none; transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+  }
+  .btn-gold:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(201,168,76,0.4); }
+  .btn-ghost {
+    background: transparent; color: var(--white);
+    padding: 0.9rem 2.2rem; border: 1.5px solid rgba(255,255,255,0.5); border-radius: 4px;
+    font-size: 0.85rem; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase;
+    text-decoration: none; cursor: none; transition: border-color 0.3s, background 0.3s;
+  }
+  .btn-ghost:hover { border-color: var(--white); background: rgba(255,255,255,0.1); }
+
+  .hero-stats {
+    position: absolute; bottom: 3rem; left: 0; right: 0;
+    display: flex; justify-content: center; gap: 4rem;
+    animation: fadeUp 0.9s ease 1s both;
+  }
+  .stat { text-align: center; }
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.4rem; color: var(--gold); letter-spacing: 1px; line-height: 1;
+  }
+  .stat-label {
+    font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase;
+    color: rgba(255,255,255,0.6); margin-top: 0.2rem;
+  }
+
+  /* MARQUEE */
+  .marquee-wrap { background: var(--navy); padding: 0.85rem 0; overflow: hidden; }
+  .marquee { display: flex; white-space: nowrap; animation: marquee 22s linear infinite; }
+  .marquee-item {
+    font-size: 0.78rem; font-weight: 500; letter-spacing: 3px; text-transform: uppercase;
+    color: rgba(201,168,76,0.8); padding: 0 2rem;
+  }
+  .dot { color: rgba(201,168,76,0.3); }
+
+  /* SECTION COMMONS */
+  .section-tag {
+    font-size: 0.68rem; font-weight: 600; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 0.7rem;
+    display: flex; align-items: center; gap: 0.8rem;
+  }
+  .section-tag::before { content: ''; width: 28px; height: 1.5px; background: var(--gold); }
+  .section-heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 4.5vw, 3.2rem); font-weight: 700; line-height: 1.1;
+    color: var(--navy);
+  }
+  .section-heading em { color: var(--gold); font-style: italic; }
+  .section-heading-white { color: var(--white); }
+  .section-heading-white em { color: var(--gold-light); }
+
+  /* ============ DESTINATIONS — photo bg panels ============ */
+  .destinations { background: var(--off-white); padding: 6rem 4rem; }
+  .dest-header { max-width: 1200px; margin: 0 auto 3rem; }
+  .dest-header p { margin-top: 0.8rem; color: var(--text-mid); font-size: 0.95rem; line-height: 1.8; max-width: 480px; }
+
+  /* Full-width hero panel */
+  .dest-hero-panel {
+    max-width: 1200px; margin: 0 auto 6px;
+    height: 480px; position: relative; overflow: hidden; border-radius: 6px 6px 0 0;
+    background: url('https://safarway.com/wp-content/uploads/2021/11/Tutla-Bhawani-Waterfall-Saffron-Sight.jpg') center/cover no-repeat;
+    transition: transform 0.6s ease;
+  }
+  .dest-hero-panel:hover { transform: scale(1.01); }
+  .dest-hero-panel::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(13,27,42,0.85) 0%, rgba(13,27,42,0.1) 60%);
+  }
+  .panel-info {
+    position: absolute; bottom: 0; left: 0; right: 0; z-index: 2;
+    padding: 2rem 2.5rem;
+    display: flex; justify-content: space-between; align-items: flex-end;
+  }
+  .panel-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.2rem; font-weight: 700; color: var(--white);
+  }
+  .panel-sub { font-size: 0.78rem; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(201,168,76,0.9); margin-top: 0.2rem; }
+  .panel-km {
+    background: var(--gold); color: var(--navy);
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 0.4rem 1rem; border-radius: 3px;
+  }
+
+  /* 3-col grid */
+  .dest-three {
+    max-width: 1200px; margin: 0 auto 6px;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px;
+  }
+  .dest-panel {
+    height: 300px; position: relative; overflow: hidden;
+    background-size: cover; background-position: center;
+    cursor: none;
+  }
+  .dest-panel::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(13,27,42,0.88) 0%, rgba(13,27,42,0.05) 55%);
+    transition: background 0.4s;
+  }
+  .dest-panel:hover::after {
+    background: linear-gradient(to top, rgba(13,27,42,0.7) 0%, rgba(26,74,122,0.25) 100%);
+  }
+  .dest-panel img.bg-img {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; transition: transform 0.7s ease;
+  }
+  .dest-panel:hover img.bg-img { transform: scale(1.07); }
+  .dest-panel .panel-info { border-radius: 0; }
+  .dest-panel .panel-name { font-size: 1.4rem; }
+
+  /* 2-col grid */
+  .dest-two {
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+  }
+  .dest-two .dest-panel { height: 260px; border-radius: 0 0 6px 6px; }
+  .dest-two .dest-panel:first-child { border-radius: 0 0 0 6px; }
+  .dest-two .dest-panel:last-child { border-radius: 0 0 6px 0; }
+
+  /* ============ ABOUT ============ */
+  .about { background: var(--white); padding: 7rem 4rem; }
+  .about-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; }
+  .about-text p { font-size: 0.97rem; color: var(--text-mid); line-height: 1.9; margin-bottom: 1.1rem; }
+  .about-text p strong { color: var(--navy); font-weight: 600; }
+  .van-card {
+    background: var(--navy); border-radius: 8px; padding: 2.5rem;
+    box-shadow: 0 20px 60px rgba(13,27,42,0.15);
+  }
+  .van-icon { font-size: 3.5rem; margin-bottom: 1.5rem; display: block; }
+  .van-specs { display: flex; flex-direction: column; gap: 0; }
+  .spec-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.85rem 0; border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .spec-row:last-child { border-bottom: none; }
+  .spec-key { font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(201,168,76,0.7); }
+  .spec-val { font-size: 0.9rem; font-weight: 500; color: var(--white); }
+
+  /* ============ ROUTES ============ */
+  .routes { background: var(--off-white); padding: 7rem 4rem; }
+  .routes-inner { max-width: 1100px; margin: 0 auto; }
+  .routes-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1.5px; background: var(--light-gray); border-radius: 8px; overflow: hidden; margin-top: 3rem;
+  }
+  .route-card {
+    background: var(--white); padding: 2rem 1.8rem;
+    transition: background 0.3s; position: relative; overflow: hidden;
+  }
+  .route-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 3px; background: var(--gold); transform: scaleX(0); transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+  .route-card:hover { background: var(--navy); }
+  .route-card:hover::before { transform: scaleX(1); }
+  .route-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.8rem; color: var(--light-gray); line-height: 1;
+    margin-bottom: 0.6rem; transition: color 0.3s;
+  }
+  .route-card:hover .route-num { color: rgba(201,168,76,0.2); }
+  .route-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.25rem; font-weight: 700; color: var(--navy); margin-bottom: 0.3rem;
+    transition: color 0.3s;
+  }
+  .route-card:hover .route-name { color: var(--white); }
+  .route-km { font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 0.9rem; }
+  .route-desc { font-size: 0.85rem; color: var(--text-mid); line-height: 1.7; margin-bottom: 1.2rem; transition: color 0.3s; }
+  .route-card:hover .route-desc { color: rgba(255,255,255,0.6); }
+  .route-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .tag {
+    font-size: 0.65rem; letter-spacing: 1px; text-transform: uppercase;
+    padding: 0.25rem 0.6rem; border-radius: 3px;
+    border: 1px solid var(--light-gray); color: var(--text-mid); transition: all 0.3s;
+  }
+  .route-card:hover .tag { border-color: rgba(201,168,76,0.3); color: rgba(201,168,76,0.7); }
+
+  /* ============ FEATURES ============ */
+  .features {
+    background: var(--navy);
+    padding: 7rem 4rem;
+  }
+  .features-inner { max-width: 1100px; margin: 0 auto; }
+  .features-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2.5rem; margin-top: 3.5rem; }
+  .feature-item { text-align: center; }
+  .feature-icon {
+    width: 60px; height: 60px; margin: 0 auto 1.2rem;
+    background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; transition: background 0.3s;
+  }
+  .feature-item:hover .feature-icon { background: rgba(201,168,76,0.2); }
+  .feature-name { font-size: 0.9rem; font-weight: 600; color: var(--white); margin-bottom: 0.4rem; }
+  .feature-desc { font-size: 0.78rem; color: rgba(255,255,255,0.45); line-height: 1.7; }
+
+  /* ============ BOOKING ============ */
+  .booking {
+    padding: 8rem 4rem;
+    background:
+      linear-gradient(rgba(13,27,42,0.82), rgba(13,27,42,0.82)),
+      url('https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Varanasi_-_Dashashwamedh_ghat_at_dusk.jpg/1200px-Varanasi_-_Dashashwamedh_ghat_at_dusk.jpg') center/cover fixed no-repeat;
+    text-align: center;
+  }
+  .booking-inner { max-width: 620px; margin: 0 auto; }
+  .booking-inner .section-tag { justify-content: center; }
+  .booking-inner .section-tag::before { display: none; }
+  .booking-inner p { margin: 1.2rem 0 2.5rem; font-size: 1rem; color: rgba(255,255,255,0.65); line-height: 1.8; }
+  .whatsapp-btn {
+    display: inline-flex; align-items: center; gap: 0.7rem;
+    background: #25d366; color: #fff; border-radius: 4px;
+    padding: 1rem 2.2rem;
+    font-size: 0.9rem; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
+    text-decoration: none; cursor: none; transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .whatsapp-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(37,211,102,0.35); }
+  .booking-note { margin-top: 1.5rem; font-size: 0.75rem; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.3); }
+
+  /* FOOTER */
+  footer { background: #080f18; padding: 2.5rem 4rem; }
+  .footer-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
+  }
+  .footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 700; color: var(--white); }
+  .footer-logo span { color: var(--gold); }
+  .footer-sub { font-size: 0.7rem; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-top: 0.2rem; }
+  .footer-copy { font-size: 0.72rem; color: rgba(255,255,255,0.2); letter-spacing: 0.5px; }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes pulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.4; transform:scale(1.5); } }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .destinations, .about, .routes, .features, .booking { padding: 4rem 1.5rem; }
+    .dest-hero-panel { height: 300px; }
+    .dest-three { grid-template-columns: 1fr; }
+    .dest-two { grid-template-columns: 1fr; }
+    .dest-panel { height: 220px; }
+    .about-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+    .routes-grid { grid-template-columns: 1fr; }
+    .features-grid { grid-template-columns: repeat(2, 1fr); }
+    .hero-stats { gap: 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-logo">Dilip <span>Traveller</span></div>
+  <ul class="nav-links">
+    <li><a href="#destinations">Destinations</a></li>
+    <li><a href="#about">The Van</a></li>
+    <li><a href="#routes">Routes</a></li>
+    <li><a href="#booking">Book Now</a></li>
+  </ul>
+</nav>
+
+<!-- HERO — Waterfall bg -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">🧭 Now Accepting Bookings</div>
+    <h1 class="hero-title">
+      DILIP<br><span class="gold">TRAVELLER</span>
+    </h1>
+    <p class="hero-sub">Your adventure companion on wheels — a converted Tata Yodha travel van, crafted for comfort and the thrill of the open road.</p>
+    <p class="hero-loc">📍 Sasaram, Bihar &nbsp;·&nbsp; Bihar · UP · Jharkhand</p>
+    <div class="hero-cta">
+      <a href="#booking" class="btn-gold">📲 Book Your Trip</a>
+      <a href="#destinations" class="btn-ghost">Explore Destinations →</a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">6+</div><div class="stat-label">Destinations</div></div>
+    <div class="stat"><div class="stat-num">6</div><div class="stat-label">Comfortable Seats</div></div>
+    <div class="stat"><div class="stat-num">24/7</div><div class="stat-label">Available</div></div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee">
+    <span class="marquee-item">Sasaram Waterfall <span class="dot">✦</span></span>
+    <span class="marquee-item">Bodh Gaya <span class="dot">✦</span></span>
+    <span class="marquee-item">Kashi Vishwanath <span class="dot">✦</span></span>
+    <span class="marquee-item">Ayodhya Dham <span class="dot">✦</span></span>
+    <span class="marquee-item">Patna City <span class="dot">✦</span></span>
+    <span class="marquee-item">Baidyanath Dham <span class="dot">✦</span></span>
+    <span class="marquee-item">Adventure Awaits <span class="dot">✦</span></span>
+    <span class="marquee-item">Sasaram Waterfall <span class="dot">✦</span></span>
+    <span class="marquee-item">Bodh Gaya <span class="dot">✦</span></span>
+    <span class="marquee-item">Kashi Vishwanath <span class="dot">✦</span></span>
+    <span class="marquee-item">Ayodhya Dham <span class="dot">✦</span></span>
+    <span class="marquee-item">Patna City <span class="dot">✦</span></span>
+    <span class="marquee-item">Baidyanath Dham <span class="dot">✦</span></span>
+    <span class="marquee-item">Adventure Awaits <span class="dot">✦</span></span>
+  </div>
+</div>
+
+<!-- DESTINATIONS — photo bg panels -->
+<section class="destinations" id="destinations">
+  <div class="dest-header">
+    <div class="section-tag">Destinations</div>
+    <h2 class="section-heading">Places We'll <em>Take You</em></h2>
+    <p>From the lush waterfalls of Sasaram to the sacred ghats of Varanasi — every journey a memory for life.</p>
+  </div>
+
+  <!-- Full-width: Waterfall -->
+  <div class="dest-hero-panel">
+    <div class="panel-info">
+      <div>
+        <div class="panel-name">Tutla Bhawani Waterfall</div>
+        <div class="panel-sub">📍 Sasaram, Rohtas · Bihar's Hidden Green Gem</div>
+      </div>
+      <div class="panel-km">~30 km</div>
+    </div>
+  </div>
+
+  <!-- 3-col: Bodh Gaya, Kashi, Ayodhya -->
+  <div class="dest-three">
+
+    <div class="dest-panel">
+      <img class="bg-img"
+        src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Mahabodhitemple.jpg/800px-Mahabodhitemple.jpg"
+        alt="Bodh Gaya"
+        onerror="this.style.display='none'; this.parentElement.style.background='url(https://images.unsplash.com/photo-1582651499749-8b65d6a65cb0?w=800) center/cover'"
+      />
+      <div class="panel-info">
+        <div>
+          <div class="panel-name">Bodh Gaya</div>
+          <div class="panel-sub">📍 Mahabodhi Temple · UNESCO Heritage</div>
+        </div>
+        <div class="panel-km">~110 km</div>
+      </div>
+    </div>
+
+    <div class="dest-panel">
+      <img class="bg-img"
+        src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Varanasi_-_Dashashwamedh_ghat_at_dusk.jpg/800px-Varanasi_-_Dashashwamedh_ghat_at_dusk.jpg"
+        alt="Varanasi Ganga Ghat"
+        onerror="this.style.display='none'; this.parentElement.style.background='url(https://images.unsplash.com/photo-1561361058-c24cecae35ca?w=800) center/cover'"
+      />
+      <div class="panel-info">
+        <div>
+          <div class="panel-name">Kashi Vishwanath</div>
+          <div class="panel-sub">📍 Varanasi · Ganga Aarti & Sacred Ghats</div>
+        </div>
+        <div class="panel-km">~85 km</div>
+      </div>
+    </div>
+
+    <div class="dest-panel">
+      <img class="bg-img"
+        src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Ram_Mandir_Front_Photo.jpg/800px-Ram_Mandir_Front_Photo.jpg"
+        alt="Ayodhya Ram Mandir"
+        onerror="this.style.display='none'; this.parentElement.style.background='url(https://images.unsplash.com/photo-1609766857890-e64e79dd4f9a?w=800) center/cover'"
+      />
+      <div class="panel-info">
+        <div>
+          <div class="panel-name">Ayodhya Dham</div>
+          <div class="panel-sub">📍 Ram Mandir · Shri Ram Janmabhoomi</div>
+        </div>
+        <div class="panel-km">~230 km</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 2-col: Patna + Baidyanath -->
+  <div class="dest-two">
+
+    <div class="dest-panel">
+      <img class="bg-img"
+        src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Patna_panorama.jpg/1200px-Patna_panorama.jpg"
+        alt="Patna City"
+        onerror="this.style.display='none'; this.parentElement.style.background='url(https://images.unsplash.com/photo-1603015580858-9c9d20ff8ff5?w=800) center/cover'"
+      />
+      <div class="panel-info">
+        <div>
+          <div class="panel-name">Patna City</div>
+          <div class="panel-sub">📍 Bihar's Capital · Ganga Riverfront</div>
+        </div>
+        <div class="panel-km">~170 km</div>
+      </div>
+    </div>
+
+    <div class="dest-panel">
+      <img class="bg-img"
+        src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Baidyanath_Temple%2C_Deoghar.jpg/800px-Baidyanath_Temple%2C_Deoghar.jpg"
+        alt="Baidyanath Dham"
+        onerror="this.style.display='none'; this.parentElement.style.background='url(https://images.unsplash.com/photo-1571115177098-24ec42ed204d?w=800) center/cover'"
+      />
+      <div class="panel-info">
+        <div>
+          <div class="panel-name">Baidyanath Dham</div>
+          <div class="panel-sub">📍 Deoghar, Jharkhand · Jyotirlinga</div>
+        </div>
+        <div class="panel-km">~200 km</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="about-inner">
+    <div class="about-text">
+      <div class="section-tag">Our Story</div>
+      <h2 class="section-heading">A Yodha <em>Transformed</em></h2>
+      <br>
+      <p>What was once a workhorse is now a wanderer. Our <strong>Tata Yodha</strong> has been lovingly converted into a compact travel van — built for the roads of Bihar and beyond.</p>
+      <p>From the ancient ghats of Varanasi to the spiritual silence of Bodh Gaya, from the divine Ram Mandir of Ayodhya to the Jyotirlinga at Deoghar — <strong>Dilip Traveller</strong> takes you there in comfort, without compromise.</p>
+      <p>We're not just a cab service. We're your travel companion, your local guide, and your home on wheels.</p>
+    </div>
+    <div class="van-card">
+      <span class="van-icon">🚐</span>
+      <div class="van-specs">
+        <div class="spec-row"><span class="spec-key">Vehicle</span><span class="spec-val">Tata Yodha (Converted)</span></div>
+        <div class="spec-row"><span class="spec-key">Capacity</span><span class="spec-val">Up to 6 Passengers</span></div>
+        <div class="spec-row"><span class="spec-key">Base Location</span><span class="spec-val">Sasaram, Bihar</span></div>
+        <div class="spec-row"><span class="spec-key">Coverage</span><span class="spec-val">Bihar · UP · Jharkhand</span></div>
+        <div class="spec-row"><span class="spec-key">Trip Types</span><span class="spec-val">Outstation · Pilgrimage · Local</span></div>
+        <div class="spec-row"><span class="spec-key">Availability</span><span class="spec-val">24 × 7 on Call</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROUTES -->
+<section class="routes" id="routes">
+  <div class="routes-inner">
+    <div class="section-tag">Popular Routes</div>
+    <h2 class="section-heading">Where Will You <em>Go Next?</em></h2>
+    <div class="routes-grid">
+      <div class="route-card">
+        <div class="route-num">01</div>
+        <div class="route-name">Sasaram → Varanasi</div>
+        <div class="route-km">📍 ~85 km · 2 hrs</div>
+        <p class="route-desc">The city of light. Ghats, temples, and the timeless flow of the Ganga. Perfect for pilgrimage or a spiritual escape.</p>
+        <div class="route-tags"><span class="tag">Spiritual</span><span class="tag">Day Trip</span><span class="tag">Popular</span></div>
+      </div>
+      <div class="route-card">
+        <div class="route-num">02</div>
+        <div class="route-name">Sasaram → Bodh Gaya</div>
+        <div class="route-km">📍 ~110 km · 2.5 hrs</div>
+        <p class="route-desc">Where the Buddha attained enlightenment. Walk the sacred Mahabodhi complex and breathe in centuries of peace.</p>
+        <div class="route-tags"><span class="tag">Pilgrimage</span><span class="tag">Heritage</span><span class="tag">UNESCO</span></div>
+      </div>
+      <div class="route-card">
+        <div class="route-num">03</div>
+        <div class="route-name">Sasaram → Ayodhya</div>
+        <div class="route-km">📍 ~230 km · 4.5 hrs</div>
+        <p class="route-desc">Visit the newly built Ram Mandir and the sacred birthplace of Lord Ram — a once-in-a-lifetime journey.</p>
+        <div class="route-tags"><span class="tag">Spiritual</span><span class="tag">Popular</span></div>
+      </div>
+      <div class="route-card">
+        <div class="route-num">04</div>
+        <div class="route-name">Rohtas Fort Circuit</div>
+        <div class="route-km">📍 ~45 km · 1.5 hrs</div>
+        <p class="route-desc">The mighty Rohtas Fort perched on Kaimur hills — history, trekking, and dramatic views all in one trip.</p>
+        <div class="route-tags"><span class="tag">Adventure</span><span class="tag">Trekking</span><span class="tag">Local</span></div>
+      </div>
+      <div class="route-card">
+        <div class="route-num">05</div>
+        <div class="route-name">Sasaram → Baidyanath</div>
+        <div class="route-km">📍 ~200 km · 4 hrs</div>
+        <p class="route-desc">One of the 12 Jyotirlingas — Baba Baidyanath temple at Deoghar, Jharkhand. A divine pilgrimage experience.</p>
+        <div class="route-tags"><span class="tag">Pilgrimage</span><span class="tag">Jyotirlinga</span></div>
+      </div>
+      <div class="route-card">
+        <div class="route-num">06</div>
+        <div class="route-name">Custom Route</div>
+        <div class="route-km">📍 Your choice · Any distance</div>
+        <p class="route-desc">Have a destination in mind? Tell us and we'll plan the perfect trip just for you — outstation, local, or multi-day.</p>
+        <div class="route-tags"><span class="tag">Flexible</span><span class="tag">Custom</span><span class="tag">Call Us</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="features-inner">
+    <div class="section-tag" style="color:var(--gold);">The Experience</div>
+    <h2 class="section-heading section-heading-white">Why Travel <em>With Us?</em></h2>
+    <div class="features-grid">
+      <div class="feature-item"><div class="feature-icon">🛋️</div><div class="feature-name">Comfortable Seating</div><p class="feature-desc">Cushioned seats with legroom for long journeys without fatigue.</p></div>
+      <div class="feature-item"><div class="feature-icon">🗺️</div><div class="feature-name">Local Knowledge</div><p class="feature-desc">Driver-guide who knows Bihar's roads, shortcuts, and hidden spots.</p></div>
+      <div class="feature-item"><div class="feature-icon">🔒</div><div class="feature-name">Safe Journey</div><p class="feature-desc">Well-maintained vehicle, careful driving, your safety first.</p></div>
+      <div class="feature-item"><div class="feature-icon">💰</div><div class="feature-name">Fair Pricing</div><p class="feature-desc">No hidden charges. Transparent rates discussed before every trip.</p></div>
+      <div class="feature-item"><div class="feature-icon">📱</div><div class="feature-name">Easy Booking</div><p class="feature-desc">One WhatsApp message and your ride is confirmed. Simple as that.</p></div>
+      <div class="feature-item"><div class="feature-icon">🌙</div><div class="feature-name">Night Travel</div><p class="feature-desc">Available for early morning or late night pickups and drops.</p></div>
+      <div class="feature-item"><div class="feature-icon">🛕</div><div class="feature-name">Pilgrimage Trips</div><p class="feature-desc">Specialised packages for Jyotirlinga, Tirtha Yatra & temple circuits.</p></div>
+      <div class="feature-item"><div class="feature-icon">👨‍👩‍👧</div><div class="feature-name">Family Friendly</div><p class="feature-desc">Perfect for families, pilgrimages, weddings, and group travel.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING — Ganga Ghat bg -->
+<section class="booking" id="booking">
+  <div class="booking-inner">
+    <div class="section-tag" style="color:var(--gold-light);">Book Now</div>
+    <h2 class="section-heading section-heading-white">Ready for <em>Adventure?</em></h2>
+    <p>Tell us your destination, date, and number of passengers — we'll take care of everything else. Reach us on WhatsApp for the fastest response.</p>
+    <a href="https://wa.me/917903026259?text=Hi%20Dilip%20Traveller!%20I%20want%20to%20book%20a%20trip." class="whatsapp-btn" target="_blank">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      WhatsApp Us
+    </a>
+    <div class="booking-note">📍 Sasaram, Rohtas District, Bihar &nbsp;·&nbsp; Available 24 × 7</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo">Dilip <span>Traveller</span></div>
+      <div class="footer-sub">Sasaram, Bihar · Est. 2024</div>
+    </div>
+    <div class="footer-copy">© 2024 Dilip Traveller · All rights reserved</div>
+  </div>
+</footer>
+
+<script>
+  // Cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; });
+  (function loop(){
+    cursor.style.transform=`translate(${mx-5}px,${my-5}px)`;
+    rx+=(mx-rx)*0.1; ry+=(my-ry)*0.1;
+    ring.style.transform=`translate(${rx-16}px,${ry-16}px)`;
+    requestAnimationFrame(loop);
+  })();
+
+  // Sticky nav
+  window.addEventListener('scroll', () => {
+    document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Scroll reveal
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting){ e.target.style.opacity='1'; e.target.style.transform='translateY(0)'; } });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.route-card, .feature-item, .van-card, .about-text, .dest-panel, .dest-hero-panel').forEach((el,i) => {
+    el.style.opacity='0'; el.style.transform='translateY(24px)';
+    el.style.transition=`opacity 0.6s ease ${i*0.06}s, transform 0.6s ease ${i*0.06}s`;
+    obs.observe(el);
+  });
+</script>
+</body>
+</html>
