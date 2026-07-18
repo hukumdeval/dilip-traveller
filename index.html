@@ -292,7 +292,11 @@ nav {
 }
 @media (max-width: 768px) { .hero-inner { padding: 0 24px; } }
 
-.hero-text { max-width: 720px; }
+.hero-text {
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: center;
+}
 
 .hero-badge {
   display: inline-flex;
@@ -326,7 +330,7 @@ nav {
 .hero-title .accent { color: var(--accent); }
 
 .hero-sub {
-  margin-top: 1.25rem;
+  margin: 1.25rem auto 0;
   font-size: 1.05rem;
   font-weight: 300;
   color: var(--muted-fg);
@@ -346,6 +350,7 @@ nav {
 .hero-cta {
   margin-top: 2rem;
   display: flex;
+  justify-content: center;
   gap: 0.75rem;
   flex-wrap: wrap;
 }
@@ -355,7 +360,7 @@ nav {
   display: flex;
   align-items: center;
   gap: 1rem;
-  margin-top: 2rem;
+  margin: 2rem auto 0;
   max-width: 400px;
 }
 .hero-divider .line {
@@ -372,7 +377,7 @@ nav {
 
 /* Stats */
 .hero-stats {
-  margin-top: 2.5rem;
+  margin: 2.5rem auto 0;
   display: flex;
   gap: 0;
   background: var(--card);
